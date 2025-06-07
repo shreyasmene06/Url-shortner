@@ -6,14 +6,12 @@ import axios from "axios";
 import DataTable from '../DataTable/DataTable';
 
 interface IContainerProps {
+  updateReloadState: () => void;
 }
 
-const Container: React.FunctionComponent<IContainerProps> = (props) => {
+const Container: React.FunctionComponent<IContainerProps> = ({ updateReloadState }) => {
   const [data,setData]=React.useState<UrlData[]>([]);
   const [reload,setReload]=React.useState<boolean>(false);
-  const updateReloadState=():void=>{
-    setReload(true);
-  };
 
   const fetchTableData=async()=>{
   const response = await axios.get(`${serverUrl}/shortUrl`)

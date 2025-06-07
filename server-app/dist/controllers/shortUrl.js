@@ -14,17 +14,15 @@ const shortUrl_1 = require("../model/shortUrl");
 const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { fullUrl } = req.body;
-        if (!fullUrl) {
-            res.status(400).json({ message: "Full URL is required" });
+        const urlFound = yield shortUrl_1.urlModel.find({ fullUrl: fullUrl });
+        if (urlFound.length > 0) {
+            res.status(200).json(urlFound[0]);
             return;
         }
-        const urlExists = yield shortUrl_1.urlModel.findOne({ fullUrl });
-        if (urlExists) {
-            res.status(200).json(urlExists);
-            return;
+        else {
+            const shortUrl = yield shortUrl_1.urlModel.create({ fullUrl });
+            res.status(201).json(shortUrl);
         }
-        const shortUrl = yield shortUrl_1.urlModel.create({ fullUrl });
-        res.status(201).json(shortUrl);
     }
     catch (error) {
         console.error(error);
@@ -34,25 +32,30 @@ const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.createUrl = createUrl;
 const getAllUrl = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const urls = yield shortUrl_1.urlModel.find();
-        res.status(200).json(urls);
+        const shortUrls = yield shortUrl_1.urlModel.find();
+        if (shortUrls.length < 0) {
+            res.status(404).send({ message: "ShortUrl not found" });
+        }
+        else {
+            res.status(200).send(shortUrls);
+        }
     }
     catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).send({ message: "Something went wrong" });
     }
 });
 exports.getAllUrl = getAllUrl;
 const getUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const url = yield shortUrl_1.urlModel.findById(req.params.id);
-        if (!url) {
-            res.status(404).json({ message: "URL not found" });
-            return;
+        const shortUrl = yield shortUrl_1.urlModel.findOne({ shortUrl: req.params.id });
+        if (!shortUrl) {
+            res.status(404).send({ message: "Fullurl not found!" });
         }
-        url.clicks++;
-        yield url.save();
-        res.status(200).json(url);
+        else {
+            shortUrl.clicks++;
+            shortUrl.save();
+            res.redirect(`${shortUrl.fullUrl}`);
+        }
     }
     catch (error) {
         console.error(error);
@@ -62,13 +65,10 @@ const getUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUrl = getUrl;
 const deleteUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const url = yield shortUrl_1.urlModel.findById(req.params.id);
-        if (!url) {
-            res.status(404).json({ message: "URL not found" });
-            return;
+        const shortUrl = yield shortUrl_1.urlModel.findByIdAndDelete({ _id: req.params.id });
+        if (shortUrl) {
+            res.status(200).send({ message: "Requested Url successfully deleted" });
         }
-        yield shortUrl_1.urlModel.deleteOne({ _id: req.params.id });
-        res.status(204).send();
     }
     catch (error) {
         console.error(error);

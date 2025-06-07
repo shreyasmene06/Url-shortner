@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server-app/src/server.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server-app/src/server.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client-app/url-shortner-app/dist/$1"
+    }
+  ]
+} 

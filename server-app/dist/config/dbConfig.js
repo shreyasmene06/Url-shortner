@@ -15,7 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const connect = yield mongoose_1.default.connect("mongodb+srv://shreyasmene06:Harrypotter123@url-shortner-cluster.ujfdyda.mongodb.net/url-shortner?retryWrites=true&w=majority&appName=url-shortner-cluster");
+        if (!process.env.MONGODB_URI) {
+            throw new Error("MONGODB_URI is not defined in environment variables");
+        }
+        const connect = yield mongoose_1.default.connect(process.env.MONGODB_URI);
         console.log("Database Connected: ", connect.connection.host, connect.connection.name);
     }
     catch (error) {

@@ -1,18 +1,15 @@
 import * as React from 'react';
 
-interface IHeaderProps {
-}
+interface IHeaderProps {}
 
-const Header: React.FunctionComponent<IHeaderProps> = (props) => {
-  return(
-    <div className='bg-slate-900'>
-        <div className='container p-2 mx-auto'>
-            <nav className='py-5'>
-                <div className='text-base text-white'>URLShortner</div>
-            </nav>
+const Header: React.FunctionComponent<IHeaderProps> = () => {
+    return (
+        <div className='container mx-auto p-2'>
+            <div className='flex justify-between items-center'>
+                <div className='text-2xl font-bold'>URL Shortener</div>
+            </div>
         </div>
-    </div>
-  ) ;
+    );
 };
 
 export default Header;

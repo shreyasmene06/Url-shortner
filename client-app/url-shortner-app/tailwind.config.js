@@ -1,14 +1,11 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./src/**/*.{html,js,ts,jsx,tsx}", // update with your source paths
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        'custom-img': "url('./src/assets/bg.jpg')",
-      },
-    },
+    extend: {},
   },
   plugins: [],
-};
+}
